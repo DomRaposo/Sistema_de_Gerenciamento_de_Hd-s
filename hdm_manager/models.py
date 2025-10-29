@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from .managers import HDManager
 
 class Cliente(models.Model):
     nome = models.CharField(max_length=200)
@@ -24,6 +25,9 @@ class HD(models.Model):
     localizacao = models.CharField(max_length=255) # Ex: "Prateleira A, Gaveta 3"
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='LIVRE')
     data_cadastro = models.DateTimeField(default=timezone.now)
+    
+    objects = HDManager()
+
 
     def __str__(self):
         return f"{self.nome_hd} ({self.serial_number})"
