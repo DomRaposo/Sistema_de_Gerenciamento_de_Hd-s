@@ -1,10 +1,15 @@
 from rest_framework import viewsets
+from rest_framework import serializers 
 from django.db.models import Q 
 from django.contrib.auth.models import User
-from .serializers import CreateUserSerializer
-from .permissions import IsSuperUser
+from .models import HD, Trabalho, Cliente, ConteudoPastaRaiz 
+
+from .serializers import HDSerializer, TrabalhoSerializer, ClienteSerializer, ConteudoPastaRaizSerializer, CreateUserSerializer
+from .permissions import IsSuperUser 
+
 
 class HDViewSet(viewsets.ModelViewSet):
+    
     serializer_class = HDSerializer
     
     def get_queryset(self):
@@ -30,7 +35,6 @@ class TrabalhoViewSet(viewsets.ModelViewSet):
         search_term = self.request.query_params.get('search', None)
 
         if search_term:
-            
             queryset = queryset.filter(
                 Q(titulo__icontains=search_term) |
                 Q(cliente__nome__icontains=search_term) 
@@ -39,11 +43,15 @@ class TrabalhoViewSet(viewsets.ModelViewSet):
         return queryset
     
     
-
+class ClienteViewSet(viewsets.ModelViewSet):
+    
+    queryset = Cliente.objects.all().order_by('nome')
+    serializer_class = ClienteSerializer
+    
+    
 class ConteudoPastaRaizViewSet(viewsets.ModelViewSet):
     queryset = ConteudoPastaRaiz.objects.all().order_by('nome_pasta')
     serializer_class = ConteudoPastaRaizSerializer
-    
     
     def get_queryset(self):
         queryset = ConteudoPastaRaiz.objects.all().order_by('nome_pasta')
@@ -58,19 +66,23 @@ class ConteudoPastaRaizViewSet(viewsets.ModelViewSet):
 
         return queryset
     
-    class UserViewSet(viewsets.ModelViewSet):
+  
+class UserViewSet(viewsets.ModelViewSet):
     
     queryset = User.objects.all().order_by('username')
-    
-    serializer_class = CreateUserSerializer 
     
     
     permission_classes = [IsSuperUser] 
     
     
     def get_serializer_class(self):
+        
         if self.action in ['create']:
             return CreateUserSerializer
         
-        return serializers.ModelSerializer 
+        class UserDisplaySerializer(serializers.ModelSerializer):
+            class Meta:
+                model = User
+                fields = ('id', 'username', 'email', 'first_name', 'last_name')
         
+        return UserDisplaySerializer
