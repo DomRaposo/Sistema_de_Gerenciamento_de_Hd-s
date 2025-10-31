@@ -1,5 +1,8 @@
 from rest_framework import viewsets
 from django.db.models import Q 
+from django.contrib.auth.models import User
+from .serializers import CreateUserSerializer
+from .permissions import IsSuperUser
 
 class HDViewSet(viewsets.ModelViewSet):
     serializer_class = HDSerializer
@@ -54,3 +57,20 @@ class ConteudoPastaRaizViewSet(viewsets.ModelViewSet):
             ).distinct()
 
         return queryset
+    
+    class UserViewSet(viewsets.ModelViewSet):
+    
+    queryset = User.objects.all().order_by('username')
+    
+    serializer_class = CreateUserSerializer 
+    
+    
+    permission_classes = [IsSuperUser] 
+    
+    
+    def get_serializer_class(self):
+        if self.action in ['create']:
+            return CreateUserSerializer
+        
+        return serializers.ModelSerializer 
+        

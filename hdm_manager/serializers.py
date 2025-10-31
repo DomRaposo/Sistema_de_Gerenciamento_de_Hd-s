@@ -1,11 +1,12 @@
 from rest_framework import serializers
 from .models import HD, Trabalho, Cliente, ConteudoPastaRaiz
+from django.contrib.auth.models import User  # 💡 NOVO: Importa o modelo User do Django
 
 
 class ClienteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cliente
-        fields = '__all__' 
+        fields = '__all__'
 
 
 class TrabalhoSerializer(serializers.ModelSerializer):
@@ -31,7 +32,6 @@ class HDSerializer(serializers.ModelSerializer):
         
 
 
-
 class ConteudoPastaRaizSerializer(serializers.ModelSerializer):
     
     trabalho_titulo = serializers.ReadOnlyField(source='trabalho.titulo')
@@ -40,4 +40,28 @@ class ConteudoPastaRaizSerializer(serializers.ModelSerializer):
     class Meta:
         model = ConteudoPastaRaiz
         fields = '__all__'
-       
+
+
+
+class CreateUserSerializer(serializers.ModelSerializer):
+    
+    password = serializers.CharField(write_only=True) 
+
+    class Meta:
+        model = User
+        
+        fields = ('id', 'username', 'email', 'password', 'first_name', 'last_name')
+        extra_kwargs = {'password': {'write_only': True}}
+
+    def create(self, validated_data):
+        
+        user = User.objects.create_user(
+            username=validated_data['username'],
+            email=validated_data.get('email', ''),
+            password=validated_data['password'],
+            first_name=validated_data.get('first_name', ''),
+            last_name=validated_data.get('last_name', ''),
+            is_staff=False,       
+            is_superuser=False   
+        )
+        return user
