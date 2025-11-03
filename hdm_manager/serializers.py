@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import HD, Trabalho, Cliente, ConteudoPastaRaiz
-from django.contrib.auth.models import User  # 💡 NOVO: Importa o modelo User do Django
+from django.contrib.auth.models import User  
 
 
 class ClienteSerializer(serializers.ModelSerializer):
