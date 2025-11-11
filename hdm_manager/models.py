@@ -21,8 +21,8 @@ class HD(models.Model):
     nome_hd = models.CharField(max_length=100)
     serial_number = models.CharField(max_length=100, unique=True)
     tamanho_total_gb = models.DecimalField(max_digits=8, decimal_places=2)
-    tamanho_livre_gb = models.DecimalField(max_digits=8, decimal_places=2) # Será atualizado ou calculado
-    localizacao = models.CharField(max_length=255) # Ex: "Prateleira A, Gaveta 3"
+    tamanho_livre_gb = models.DecimalField(max_digits=8, decimal_places=2) 
+    localizacao = models.CharField(max_length=255) 
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='LIVRE')
     data_cadastro = models.DateTimeField(default=timezone.now)
     

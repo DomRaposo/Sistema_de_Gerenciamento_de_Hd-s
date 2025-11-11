@@ -22,9 +22,13 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+CORS_ALLOW_CREDENTIALS = True
+
 CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
     "http://localhost:5174",
     "http://127.0.0.1:5174",
+    "http://127.0.0.1:5173"
 ]
 
 
@@ -51,6 +55,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware', 
+    'django.middleware.security.SecurityMiddleware',
 ]
 
 ROOT_URLCONF = 'legado_hdm_project.urls'
